@@ -1,0 +1,2 @@
+# 5. Deployment & Test Strategy
+The deployment will be handled by Vercel's integrated CI/CD pipeline, using a Canary Deployment strategy. The test strategy will use Vitest for unit/integration tests and Playwright for E2E tests.

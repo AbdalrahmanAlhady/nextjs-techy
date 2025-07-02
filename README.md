@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nextjs-techy
+
+## Project Overview
+A monorepo e-commerce platform built with Next.js, Drizzle ORM, PostgreSQL, and Tailwind CSS. This project follows the BMAD-METHOD for story-driven development and strict Dev Agent protocol for task execution.
+
+---
 
 ## Getting Started
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### 1. Clone the Repository
+```sh
+git clone <your-repo-url>
+cd nextjs-techy
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```sh
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Environment Variables
+Copy `.env.example` to `.env` and fill in your credentials:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+DATABASE_URL=postgres://<user>:<password>@<host>:<port>/<db>
+DRIZZLE_DB_URL=${DATABASE_URL}
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+> **Note:** `.env` is gitignored for security.
 
-## Learn More
+### 4. Database Setup & Migrations
+- Configure your PostgreSQL database (e.g., via Supabase or local Postgres).
+- Generate and run migrations:
+```sh
+npx drizzle-kit generate
+npx drizzle-kit push
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Run the Development Server
+```sh
+npm run dev
+```
+Visit [http://localhost:3000](http://localhost:3000) (or the port shown in your terminal).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Story-Driven Development
+- User stories and tasks are tracked in `/docs/stories/` (see `1.1.story.md`).
+- Follow Dev Agent protocol: Mark tasks as `[x]` (complete) or `[-]` (in progress) in the story file as you work.
+- Reference PRD and architecture docs in `/docs/prd/` and `.bmad-core/` for requirements.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
+- `/app` — Next.js app directory with route groups for auth, dashboard, main, and API endpoints
+- `/components` — Shared React components
+- `/lib` — Utility functions and libraries
+- `/store` — State management (e.g., Redux, Zustand)
+- `/public` — Static assets
+- `/packages/db` — Drizzle ORM schema and config
+- `/drizzle.config.ts` — Drizzle ORM config
+- `/tailwind.config.js` — Tailwind CSS config
+- `/docs` — PRD, stories, and architecture documentation
+- `/tests/story-1.1/` — Integration tests for Story 1.1
+- `/e2e/story-1.1/` — End-to-end tests for Story 1.1
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Scripts
+- `npm run dev` — Start Next.js dev server
+- `npm run build` — Build for production
+- `npm run start` — Start production server
+- `npx drizzle-kit generate` — Generate SQL migrations from schema
+- `npx drizzle-kit push` — Apply migrations to database
+
+---
+
+## Coding Standards
+- TypeScript, Prettier, and ESLint recommended
+- Use enums and references in schema for type safety
+- Store sensitive data in `.env`
+- Follow modular and maintainable folder structure
+
+---
+
+## Testing
+- Integration tests: `/tests/story-1.1/`
+- E2E tests: `/e2e/story-1.1/`
+- Add more tests as you implement new stories
+
+---
+
+## Additional Notes
+- See `/docs/stories/1.1.story.md` for detailed story, tasks, and acceptance criteria
+- For any blockers or questions, consult the PRD or reach out to the team
+
+---
+
+Happy coding!
