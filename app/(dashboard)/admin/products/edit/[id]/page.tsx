@@ -7,9 +7,10 @@ import { getAllVendors } from '@/app/actions/admin-vendors';
 import { getProductById } from '@/app/actions/admin-products';
 import BackButton from '@/components/ui/BackButton';
 
-export default async function EditProductPage({ params }: { params: { id:string } }) {
-  // Await params per Next.js 15 async dynamic API
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
+  
   const session = await getSessionFromCookie();
   if (!session || typeof session !== 'object' || session.role !== 'ADMIN') {
     redirect('/not-authorized');

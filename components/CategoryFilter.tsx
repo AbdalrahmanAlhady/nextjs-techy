@@ -11,10 +11,10 @@ const CategoryFilter = ({ categories }: CategoryFilterProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const selectedCategory = searchParams.get('category');
+  const selectedCategory = searchParams?.get('category') || null;
 
   const handleCategoryClick = (category: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams ? searchParams.toString() : '');
 
     if (category === 'All' || category === selectedCategory) {
       params.delete('category');

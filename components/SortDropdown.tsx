@@ -17,10 +17,10 @@ export default function SortDropdown({ sortOptions }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentSortBy = searchParams.get('sortBy') || 'date-desc';
+  const currentSortBy = searchParams?.get('sortBy') || 'date-desc';
 
   const handleSortChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams ? searchParams.toString() : '');
     params.set('sortBy', value);
     params.set('page', '1');
     router.push(`${pathname}?${params.toString()}`);

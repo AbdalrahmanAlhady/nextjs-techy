@@ -6,8 +6,9 @@ import RoleChip from '@/components/ui/RoleChip';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import StatusChip from '@/components/ui/StatusChip';
 
-export default async function VendorProfilePage({ params }: { params: { id: string } }) {
+export default async function VendorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
   const { vendor, success, error } = await getVendorById(id);
 
   if (!success || !vendor) {

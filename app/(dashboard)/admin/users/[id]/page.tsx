@@ -6,8 +6,9 @@ import StatusChip from '@/components/ui/StatusChip';
 import BackButton from '@/components/ui/BackButton';
 import RoleChip from '@/components/ui/RoleChip';
 
-export default async function UserProfilePage({ params }: { params: { id: string } }) {
+export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
   const { user, success, error } = await getUserById(id);
 
   if (!success || !user) {

@@ -18,6 +18,11 @@ function OrderConfirmation() {
   const [order, setOrder] = useState<{ shippingCost: number; total: number; shippingAddress?: any } | null>(null);
 
   useEffect(() => {
+    if (!searchParams) {
+      setStatus('error');
+      setError('Invalid order confirmation URL.');
+      return;
+    }
     const orderId = searchParams.get('order_id');
     const paymentIntentId = searchParams.get('payment_intent');
 

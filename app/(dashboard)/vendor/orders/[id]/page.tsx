@@ -6,6 +6,7 @@ import BackButton from "@/components/ui/BackButton";
 
 export default async function OrderDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
   const res = await getVendorOrderById(id);
   if (!res.success) notFound();
   const { order } = res;

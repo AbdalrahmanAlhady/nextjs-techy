@@ -5,14 +5,14 @@ import { notFound } from 'next/navigation';
 import ProductDetailClient from '@/components/ProductDetailClient';
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     productId: string;
-  };
+  }>;
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  // Next.js may provide `params` as a Promise in recent versions, so await it defensively
-  const { productId } = (await params as any);
+  const { productId } = await params;
+
   const product = await db.query.products.findFirst({
     where: eq(products.id, productId),
   });

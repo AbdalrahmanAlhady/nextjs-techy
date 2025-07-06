@@ -5,8 +5,9 @@ import { getAllCategories } from '@/app/actions/admin-categories';
 import { getVendorProductById } from '@/app/actions/vendor-products';
 import BackButton from '@/components/ui/BackButton';
 
-export default async function EditVendorProductPage({ params }: { params: { id: string } }) {
+export default async function EditVendorProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
   const session = await getSessionFromCookie();
   if (!session || typeof session !== 'object' || session.role !== 'VENDOR') {
     redirect('/not-authorized');

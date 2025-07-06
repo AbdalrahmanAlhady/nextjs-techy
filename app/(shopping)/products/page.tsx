@@ -6,7 +6,7 @@ import CategoryFilter from '@/components/CategoryFilter';
 import SortDropdown from '@/components/SortDropdown';
 import { Product } from '@/types';
 
-export default async function ProductsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
   const resolvedSearchParams = await searchParams;
   const currentPage = Number(resolvedSearchParams.page) || 1;
   const category = typeof resolvedSearchParams.category === 'string' ? resolvedSearchParams.category : undefined;

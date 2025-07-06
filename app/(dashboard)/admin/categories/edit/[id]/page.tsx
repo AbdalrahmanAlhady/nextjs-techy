@@ -3,8 +3,9 @@ import { getCategoryById } from '@/app/actions/admin-categories';
 import CategoryForm from '@/components/categories/CategoryForm';
 import BackButton from '@/components/ui/BackButton';
 
-export default async function EditCategoryPage({ params }: { params: { id: string } }) {
+export default async function EditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
   const { category, success, error } = await getCategoryById(id);
 
   if (!success || !category) {
