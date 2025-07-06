@@ -4,15 +4,18 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
 import TechyButton from './TechyButton';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
 interface HeaderProps { isLoggedIn?: boolean; role?: string }
 
 const Header = ({ isLoggedIn = false, role }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const navLinks = [
-    { href: '/', label: 'Home' },
     { href: '/products', label: 'Products' },
     ...(role === 'ADMIN'
       ? [{ href: '/admin', label: 'Dashboard' }]
@@ -62,9 +65,11 @@ const Header = ({ isLoggedIn = false, role }: HeaderProps) => {
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/cart" className="relative p-2 text-neutral hover:text-primary transition-colors">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                3
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
             </Link>
             {isLoggedIn && (
               <Link href="/profile" className="p-2 text-neutral hover:text-primary transition-colors">
@@ -121,7 +126,7 @@ const Header = ({ isLoggedIn = false, role }: HeaderProps) => {
                 <div className="flex items-center justify-between px-3">
                   <Link href="/cart" className="flex items-center text-neutral hover:text-primary">
                     <ShoppingCart className="w-5 h-5 mr-2" />
-                    Cart (3)
+                    Cart{itemCount > 0 ? ` (${itemCount})` : ''}
                   </Link>
                   <Link href="/sign-in">
                     <TechyButton variant="secondary" size="sm">

@@ -1,8 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addItem } from '@/app/store/cartSlice';
+import { useToast } from '@/hooks/use-toast';
 import { Minus, Plus, ShoppingCart, Heart } from 'lucide-react';
 import StarRating from './StarRating';
+import StarRatingInput from './StarRatingInput';
 import type { InferSelectModel } from 'drizzle-orm';
 import { products } from '@/packages/db/schema';
 
@@ -12,17 +16,52 @@ interface ProductDetailClientProps {
   product: Product;
 }
 
+
+import { useTransition } from 'react';
+
 const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) => {
+  const [purchaseStatus, setPurchaseStatus] = useState<'loading' | 'eligible' | 'ineligible'>('loading');
+
+
+  useEffect(() => {
+    let isMounted = true;
+    async function checkPurchase() {
+      setPurchaseStatus('loading');
+      try {
+        const { hasPurchasedProduct } = await import('@/app/actions/buyer-has-purchased-product');
+        const result = await hasPurchasedProduct(product.id);
+        if (isMounted) {
+          setPurchaseStatus(result.hasPurchased ? 'eligible' : 'ineligible');
+        }
+      } catch {
+        if (isMounted) setPurchaseStatus('ineligible');
+      }
+    }
+    checkPurchase();
+    return () => { isMounted = false; };
+  }, [product.id]);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
+  const dispatch = useDispatch();
+  const { toast } = useToast();
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, prev + delta));
   };
 
   const handleAddToCart = () => {
-    console.log(`Product ${product.id} added to cart with quantity ${quantity}`);
-    alert('Added to cart! (Functionality pending cart implementation)');
+    const cartItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: quantity,
+    };
+    dispatch(addItem(cartItem));
+    toast({
+      title: "Added to cart",
+      description: `${product.name} (x${quantity}) has been added to your cart.`,
+    });
   };
 
   const tabs = [
@@ -30,9 +69,25 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
     { id: 'reviews', label: 'Reviews' },
   ];
 
-  // Placeholder data for features not yet in the database
-  const rating = 4.5;
-  const reviewCount = 150;
+    // State for reviews and average rating
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+
+  async function fetchReviews() {
+    const { getProductReviews } = await import('@/app/actions/get-reviews');
+    const res = await getProductReviews(product.id);
+    setReviews(res.reviews);
+    setAverageRating(res.average);
+    setReviewCount(res.count);
+  }
+
+  useEffect(() => {
+    fetchReviews();
+  }, [product.id]);
+
+  // No review form here; only display reviews.
+
 
   return (
     <div className="bg-secondary min-h-screen">
@@ -54,8 +109,8 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
             <h1 className="text-3xl font-bold text-neutral mb-4">{product.name}</h1>
 
             <div className="flex items-center gap-4 mb-6">
-              <StarRating rating={rating} size="md" />
-              <span className="text-neutral-muted">({reviewCount} reviews)</span>
+              <StarRating rating={averageRating} size="md" />
+              <span className="text-neutral-muted">({reviewCount} review{reviewCount !== 1 ? 's' : ''})</span>
             </div>
 
             <div className="flex items-center gap-3 mb-6">
@@ -140,8 +195,27 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
             )}
             
             {activeTab === 'reviews' && (
-              <div className="text-center py-12">
-                <p className="text-neutral-muted">Reviews section coming soon...</p>
+              <div className="max-w-xl mx-auto">
+                {/* Reviews List */}
+                <div className="mt-10">
+                  <h4 className="font-semibold mb-4">Reviews</h4>
+                  {reviews.length === 0 ? (
+                    <div className="text-neutral-muted">No reviews yet.</div>
+                  ) : (
+                    <ul className="space-y-6">
+                      {reviews.map(r => (
+                        <li key={r.id} className="border-b border-border pb-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <StarRating rating={r.rating} size="sm" />
+                            <span className="text-xs text-neutral-muted">{new Date(r.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          <div className="text-sm font-medium text-neutral mb-1">{r.userName || 'Anonymous'}</div>
+                          <div className="text-neutral text-sm">{r.comment}</div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
             )}
           </div>

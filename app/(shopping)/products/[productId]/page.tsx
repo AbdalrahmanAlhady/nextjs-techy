@@ -3,7 +3,6 @@ import { products } from '@/packages/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import ProductDetailClient from '@/components/ProductDetailClient';
-import Layout from '@/components/Layout';
 
 interface ProductPageProps {
   params: {
@@ -23,8 +22,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <Layout>
-      <ProductDetailClient product={product} />
-    </Layout>
+    <ProductDetailClient product={product} />
   );
 }

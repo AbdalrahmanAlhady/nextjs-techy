@@ -15,16 +15,15 @@ export interface Product {
   updatedAt: Date;
 }
 
-export interface ProductCardProps {
-    id: string;
-    title: string;
-    vendor?: string;
-    price: number;
-    originalPrice?: number;
-    rating?: number;
-    imageUrl: string;
-    imageAlt?: string;
-  }
+
+
+export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string | null;
+  quantity: number;
+}
 
 export interface Category {
   id: string;

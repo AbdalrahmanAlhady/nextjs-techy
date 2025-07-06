@@ -4,7 +4,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@
 import SimplePagination from "@/components/ui/simple-pagination";
 import VendorActions from "@/components/vendors/VendorActions";
 import StatusChip from "@/components/ui/StatusChip";
-import type { IUser as Vendor } from "@/types/vendor";
+import type { IUser as Vendor } from "@/types/user";
 
 interface Props {
   vendors: Vendor[];

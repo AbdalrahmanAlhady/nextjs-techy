@@ -74,6 +74,7 @@ export const orders = pgTable('orders', {
   userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   status: orderStatusEnum('status').default('PENDING').notNull(),
   total: integer('total').notNull(), // Total in cents
+  shippingCost: integer('shipping_cost').notNull().default(10),
   shippingAddress: jsonb('shipping_address').$type<{ street: string; city: string; state: string; zip: string; country: string; }>(),
   stripePaymentIntentId: text('stripe_payment_intent_id').unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),

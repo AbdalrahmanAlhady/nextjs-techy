@@ -5,7 +5,6 @@ import { Pagination } from '@/components/Pagination';
 import CategoryFilter from '@/components/CategoryFilter';
 import SortDropdown from '@/components/SortDropdown';
 import { Product } from '@/types';
-import Layout from '@/components/Layout';
 
 export default async function ProductsPage({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const resolvedSearchParams = await searchParams;
@@ -29,7 +28,6 @@ export default async function ProductsPage({ searchParams }: { searchParams: { [
   const baseUrl = `/products?${params.toString()}`;
 
   return (
-    <Layout>
       <div className="bg-secondary min-h-screen">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
@@ -46,14 +44,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: { [
               {products.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {products.map((product: Product) => (
-                    <ProductCard
-                      key={product.id}
-                      id={product.id}
-                      title={product.name}
-                      price={product.price}
-                      imageUrl={product.image || '/globe.svg'}
-                      imageAlt={product.name}
-                    />
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
               ) : (
@@ -70,7 +61,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: { [
           </div>
         </div>
       </div>
-    </Layout>
+
   );
 }
 

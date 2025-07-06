@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Eye, Check, X } from 'lucide-react';
 import { approveVendor, denyVendor } from '@/app/actions/admin-vendors';
-import type { IUser } from '@/types/vendor';
+import type { IUser } from '@/types/user';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
