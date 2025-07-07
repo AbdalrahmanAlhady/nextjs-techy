@@ -23,7 +23,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.image || undefined,
       quantity: 1,
     };
     dispatch(addItem(cartItem));

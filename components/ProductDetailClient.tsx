@@ -55,7 +55,7 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
       id: product.id,
       name: product.name,
       price: product.price,
-      image: product.image,
+      image: product.image || undefined,
       quantity: quantity,
     };
     dispatch(addItem(cartItem));
