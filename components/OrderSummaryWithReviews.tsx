@@ -11,9 +11,10 @@ interface OrderSummaryWithReviewsProps {
   subtotal: number;
   shipping?: number;
   total?: number;
+  showReviews?: boolean;
 }
 
-export default function OrderSummaryWithReviews({ cartItems, subtotal, shipping, total }: OrderSummaryWithReviewsProps) {
+export default function OrderSummaryWithReviews({ cartItems, subtotal, shipping, total, showReviews = false }: OrderSummaryWithReviewsProps) {
   const [userId, setUserId] = useState<string | null>(null);
   const [reviewed, setReviewed] = useState<Record<string, boolean>>({});
 
@@ -66,12 +67,14 @@ export default function OrderSummaryWithReviews({ cartItems, subtotal, shipping,
                   <p className="text-gray-500">Qty {item.quantity}</p>
                 </div>
                 {/* Review Form */}
-                <OrderItemReviewForm
-                  productId={item.id}
-                  productName={item.name}
-                  alreadyReviewed={!!reviewed[item.id]}
-                  onReviewSubmit={() => handleReviewSubmit(item.id)}
-                />
+                {showReviews && (
+                  <OrderItemReviewForm
+                    productId={item.id}
+                    productName={item.name}
+                    alreadyReviewed={!!reviewed[item.id]}
+                    onReviewSubmit={() => handleReviewSubmit(item.id)}
+                  />
+                )}
               </div>
             </li>
           ))}

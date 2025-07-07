@@ -9,6 +9,7 @@ import StarRating from './StarRating';
 import StarRatingInput from './StarRatingInput';
 import type { InferSelectModel } from 'drizzle-orm';
 import { products } from '@/packages/db/schema';
+import { Button } from './ui/button';
 
 type Product = InferSelectModel<typeof products>;
 
@@ -113,32 +114,47 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
               <span className="text-neutral-muted">({reviewCount} review{reviewCount !== 1 ? 's' : ''})</span>
             </div>
 
-            <div className="flex items-center gap-3 mb-6">
-              <h2 className="text-3xl font-bold text-neutral">${(product.price / 100).toFixed(2)}</h2>
-            </div>
-
-            <div className="mb-6">
-              {product.stock > 0 ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span className="text-accent font-medium">In Stock ({product.stock} available)</span>
+            <div className="mt-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-3xl font-bold text-neutral">${(product.price / 100).toFixed(2)}</h2>
+                <div className="flex items-center gap-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                  >
+                    <Heart className="mr-2 h-4 w-4" />
+                    Save for later
+                  </Button>
+                  <Button 
+                    className="w-full" 
+                    onClick={handleAddToCart}
+                    disabled={product.stock === 0 || quantity > product.stock}
+                  >
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  </Button>
                 </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-danger rounded-full"></div>
-                  <span className="text-danger font-medium">Out of Stock</span>
+              </div>
+
+              {/* Stock status */}
+              {product.stock <= 5 && product.stock > 0 && (
+                <div className="mt-2 text-sm text-yellow-600">
+                  Low stock warning: Only {product.stock} left in stock
                 </div>
               )}
-            </div>
+              {product.stock === 0 && (
+                <div className="mt-2 text-sm text-red-600">
+                  This product is currently out of stock
+                </div>
+              )}
 
-            {/* Quantity & Add to Cart */}
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center gap-4">
-                <span className="font-medium text-neutral">Quantity:</span>
-                <div className="flex items-center border border-border rounded-md">
+              {/* Quantity selector */}
+              <div className="mt-4 flex items-center gap-4">
+                <span className="text-sm text-neutral-muted">Quantity:</span>
+                <div className="flex items-center gap-2">
                   <button
                     onClick={() => handleQuantityChange(-1)}
-                    className="p-2 text-neutral-muted hover:bg-secondary transition-colors disabled:opacity-50"
+                    className="p-2 text-neutral-muted hover:bg-secondary transition-colors"
                     disabled={quantity <= 1}
                   >
                     <Minus className="w-4 h-4" />
@@ -147,22 +163,19 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
                   <button
                     onClick={() => handleQuantityChange(1)}
                     className="p-2 text-neutral-muted hover:bg-secondary transition-colors"
+                    disabled={quantity >= product.stock}
                   >
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="flex gap-3">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                  className="flex-1 bg-primary text-white font-semibold py-3 px-6 rounded-md hover:bg-primary/90 transition-all flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
-                </button>
-              </div>
+              {/* Stock limit warning */}
+              {quantity > product.stock && (
+                <div className="mt-2 text-sm text-red-600">
+                  Maximum available: {product.stock}
+                </div>
+              )}
             </div>
           </div>
         </div>

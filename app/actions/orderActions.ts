@@ -1,11 +1,23 @@
 'use server';
 
 import { db } from '@/packages/db';
-import { orders, orderItems } from '@/packages/db/schema';
+import { orders, orderItems, products } from '@/packages/db/schema';
 import { FLAT_RATE_SHIPPING_COST } from '@/config/shipping';
-import { eq } from 'drizzle-orm';
-import { CartItem } from '@/types';
+import { eq, inArray, sql } from 'drizzle-orm';
 import { getSessionFromCookie } from './get-session';
+import Stripe from 'stripe';
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image?: string;
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-06-30.basil',
+});
 
 interface ShippingAddress {
   street: string;
@@ -15,65 +27,133 @@ interface ShippingAddress {
   country: string;
 }
 
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function createOrderAndPaymentIntent(
   cartItems: CartItem[],
   shippingAddress: ShippingAddress
-) {
+): Promise<{
+  success: boolean;
+  error?: string;
+  clientSecret: string | null;
+  orderId: string | null;
+  subtotal: number | null;
+  shipping: number | null;
+  total: number | null;
+}> {
   const session = await getSessionFromCookie();
   if (!session?.id) {
-    return { success: false, error: 'User not authenticated' };
+    return { 
+      success: false, 
+      error: 'User not authenticated',
+      clientSecret: null,
+      orderId: null,
+      subtotal: null,
+      shipping: null,
+      total: null
+    };
   }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shippingCost = FLAT_RATE_SHIPPING_COST;
-  const total = subtotal + shippingCost;
-
   try {
-    const newOrder = await db
-      .insert(orders)
-      .values({
-        userId: session.id,
-        total,
-        shippingCost,
-        shippingAddress,
-        status: 'PENDING',
+    // Verify stock availability
+    const productIds = cartItems.map(item => item.id);
+    const productStocks = await db
+      .select({
+        productId: products.id,
+        currentStock: products.stock
       })
-      .returning({ id: orders.id });
+      .from(products)
+      .where(inArray(products.id, productIds));
 
-    const orderId = newOrder[0].id;
+    for (const { productId, currentStock } of productStocks) {
+      const item = cartItems.find(item => item.id === productId);
+      if (!item) continue;
+      
+      if (currentStock < item.quantity) {
+        return { 
+          success: false, 
+          error: `Insufficient stock for product ${productId}. Available: ${currentStock}, Required: ${item.quantity}`,
+          clientSecret: null,
+          orderId: null,
+          subtotal: null,
+          shipping: null,
+          total: null
+        };
+      }
+    }
 
-    const newOrderItems = cartItems.map((item) => ({
-      orderId,
-      productId: item.id,
-      quantity: item.quantity,
-      price: item.price,
-    }));
+    // Reserve stock by updating product quantities
+    const tx = await db.transaction(async (tx: any) => {
+      try {
+        const subtotal = cartItems.reduce((sum: number, item: CartItem) => {
+          return (sum + (item.price * item.quantity)) as number;
+        }, 0) as number;
+        const shippingCost = FLAT_RATE_SHIPPING_COST;
+        const total = (subtotal + shippingCost) as number;
 
-    await db.insert(orderItems).values(newOrderItems);
+        // Create order
+        const newOrder = await tx
+          .insert(orders)
+          .values({
+            userId: session.id,
+            total: total,
+            shippingCost,
+            shippingAddress,
+            status: 'PENDING',
+          })
+          .returning({ id: orders.id });
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: total,
-      currency: 'usd',
-      metadata: { orderId },
+        const orderId = newOrder[0].id;
+
+        // Create order items
+        const newOrderItems = cartItems.map((item) => ({
+          orderId: orderId,
+          productId: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        }));
+
+        await tx.insert(orderItems).values(newOrderItems);
+
+        // Reserve stock
+        for (const item of cartItems) {
+          await tx.update(products)
+            .set({ stock: sql`${products.stock} - ${item.quantity}` })
+            .where(eq(products.id, item.id));
+        }
+
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: total,
+          currency: 'usd',
+          metadata: { orderId },
+        });
+
+        await tx.update(orders).set({ stripePaymentIntentId: paymentIntent.id }).where(eq(orders.id, orderId));
+
+        return {
+          success: true,
+          clientSecret: paymentIntent.client_secret ?? null,
+          orderId: orderId,
+          subtotal: subtotal,
+          shipping: shippingCost,
+          total: total,
+        };
+      } catch (error) {
+        console.error('Error during transaction:', error);
+        throw error;
+      }
     });
 
-    await db.update(orders).set({ stripePaymentIntentId: paymentIntent.id }).where(eq(orders.id, orderId));
-
-    return {
-      success: true,
-      clientSecret: paymentIntent.client_secret,
-      orderId,
-      subtotal,
-      shipping: shippingCost,
-      total,
-    };
+    return tx;
   } catch (error) {
     console.error('Error creating order and payment intent:', error);
-    return { success: false, error: 'Failed to create order' };
+    return { 
+      success: false, 
+      error: 'Failed to create order',
+      clientSecret: null,
+      orderId: null,
+      subtotal: null,
+      shipping: null,
+      total: null
+    };
   }
 }
 
@@ -84,8 +164,19 @@ export async function confirmOrder(orderId: string, paymentIntentId: string) {
       await db.update(orders).set({ status: 'PROCESSING' }).where(eq(orders.id, orderId));
       // Fetch order details for confirmation page
       const order = await db.select().from(orders).where(eq(orders.id, orderId)).then(res => res[0]);
-      if (!order) return { success: false, error: 'Order not found' };
-      return {
+      if (!order) {
+        return { 
+          success: false, 
+          error: 'Transaction failed',
+          clientSecret: null,
+          orderId: null,
+          subtotal: null,
+          shipping: null,
+          total: null
+        };
+      }
+
+      return { 
         success: true,
         order: {
           shippingCost: order.shippingCost,

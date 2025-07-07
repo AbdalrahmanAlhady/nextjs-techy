@@ -78,6 +78,7 @@ export default function CheckoutClient() {
                 subtotal={subtotal} 
                 shipping={shipping} 
                 total={total} 
+                showReviews={false}
               />
             </div>
           </div>
