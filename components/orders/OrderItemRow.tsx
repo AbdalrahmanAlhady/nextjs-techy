@@ -29,7 +29,7 @@ export default function OrderItemRow({ item }: Props) {
     <tr>
       <td className="px-6 py-4 whitespace-nowrap">{item.productName}</td>
       <td className="px-6 py-4">{item.quantity}</td>
-      <td className="px-6 py-4">${item.price}</td>
+      <td className="px-6 py-4">${(item.price / 100).toFixed(2)}</td>
       <td className="px-6 py-4">{status}</td>
       <td className="px-6 py-4 text-right">
         {status !== 'DELIVERED' && (
