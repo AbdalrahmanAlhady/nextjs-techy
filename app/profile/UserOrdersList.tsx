@@ -57,6 +57,7 @@ export default function UserOrdersList({ orders }: UserOrdersListProps) {
                 subtotal={details.total}
                 shipping={details.shippingCost}
                 total={details.total}
+                showReviews={true}
               />
               <div className="mt-4 text-sm text-gray-700">
                 <div className="font-semibold mb-1">Shipping Address:</div>
