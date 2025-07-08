@@ -45,7 +45,7 @@ const Footer = () => {
                 {links.map((link) => (
                   <li key={link.href}>
                     <Link
-                   href={link.href}
+                   prefetch={false} href={link.href}
                       className="text-white/80 hover:text-white transition-colors text-sm"
                     >
                       {link.label}

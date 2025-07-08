@@ -123,7 +123,7 @@ export default function SignInPage() {
               })()}
             </FormProvider>
             <div className="text-center mt-6 space-y-2">
-              <Link href="/forgot-password" className="block text-primary hover:text-primary/80 text-sm font-medium">
+              <Link prefetch={false} href="/forgot-password" className="block text-primary hover:text-primary/80 text-sm font-medium">
                 Forgot your password?
               </Link>
               <div>
