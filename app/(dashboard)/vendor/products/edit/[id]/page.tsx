@@ -1,8 +1,8 @@
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 import { redirect } from 'next/navigation';
 import ProductForm from '@/components/products/ProductForm';
-import { getAllCategories } from '@/app/actions/admin-categories';
-import { getVendorProductById } from '@/app/actions/vendor-products';
+import { getAllCategories } from '@/app/actions/admin/categories';
+import { getVendorProductById } from '@/app/actions/vendor/products';
 import BackButton from '@/components/ui/BackButton';
 
 export default async function EditVendorProductPage({ params }: { params: Promise<{ id: string }> }) {

@@ -1,6 +1,6 @@
 'use server';
 import { revalidatePath } from 'next/cache';
-import { addVendorProduct, editVendorProduct, deleteVendorProduct, archiveVendorProduct, unarchiveVendorProduct } from './vendor-products';
+import { addVendorProduct, editVendorProduct, deleteVendorProduct, archiveVendorProduct, unarchiveVendorProduct } from './products';
 
 export type VendorProductFormData = {
   name: string;

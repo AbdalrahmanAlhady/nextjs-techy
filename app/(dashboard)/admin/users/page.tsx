@@ -1,4 +1,4 @@
-import { getAllUsers } from '@/app/actions/admin-users';
+import { getAllUsers } from '@/app/actions/admin/users';
 import UserTable from '@/components/users/UserTable';
 import HomeButton from '@/components/ui/HomeButton';
 

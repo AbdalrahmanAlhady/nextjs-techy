@@ -1,5 +1,5 @@
 // Auto-redirect /admin -> /admin/users
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 import { redirect } from 'next/navigation';
 
 

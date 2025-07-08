@@ -1,6 +1,6 @@
-import { getVendorProducts } from '@/app/actions/vendor-products';
+import { getVendorProducts } from '@/app/actions/vendor/products';
 import ProductTable from '@/components/products/ProductTable';
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 import { redirect } from 'next/navigation';
 import HomeButton from '@/components/ui/HomeButton';
 

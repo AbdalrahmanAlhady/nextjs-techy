@@ -17,8 +17,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { signInAction } from "@/app/actions/auth";
-import { getSessionFromCookie } from "@/app/actions/get-session";
+import { signInAction } from "@/app/actions/auth/sign-in";
+import { getSessionFromCookie } from "@/app/actions/auth/get-session";
 
 const signInSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -40,7 +40,7 @@ export default function SignInPage() {
   const { useRouter } = require('next/navigation');
   const router = useRouter();
   async function handleSetCookie(token: string) {
-    const { setAuthCookie } = await import("@/app/actions/set-cookie");
+    const { setAuthCookie } = await import("@/app/actions/auth/set-cookie");
     await setAuthCookie(token);
   }
 

@@ -4,7 +4,7 @@ import StarRating from '@/components/StarRating';
 import OrderItemReviewForm from './OrderItemReviewForm';
 import { CartItem } from '@/types';
 import { getProductReviews } from '@/app/actions/get-reviews';
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 
 interface OrderSummaryWithReviewsProps {
   cartItems: CartItem[];

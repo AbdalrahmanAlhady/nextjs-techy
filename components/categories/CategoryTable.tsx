@@ -6,7 +6,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { deleteCategory } from '@/app/actions/admin-categories';
+import { deleteCategory } from '@/app/actions/admin/categories';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 

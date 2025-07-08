@@ -4,7 +4,7 @@ import { db } from '@/packages/db';
 import { orders, orderItems, products } from '@/packages/db/schema';
 import { FLAT_RATE_SHIPPING_COST } from '@/config/shipping';
 import { eq, inArray, sql } from 'drizzle-orm';
-import { getSessionFromCookie } from './get-session';
+import { getSessionFromCookie } from './auth/get-session';
 import Stripe from 'stripe';
 
 interface CartItem {

@@ -15,7 +15,7 @@ import {
   suspendUser,
   reinstateUser,
   deleteUser,
-} from "@/app/actions/admin-users";
+} from "@/app/actions/admin/users";
 import { useToast } from "@/hooks/use-toast";
 import StatusChip from "@/components/ui/StatusChip";
 import { useRouter } from "next/navigation";

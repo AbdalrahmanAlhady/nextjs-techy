@@ -1,6 +1,6 @@
 "use server";
 import { db, reviews } from "@/packages/db";
-import { getSessionFromCookie } from "./get-session";
+import { getSessionFromCookie } from "./auth/get-session";
 
 export async function submitReview({ productId, rating, comment }: { productId: string; rating: number; comment: string }) {
   const session = await getSessionFromCookie();

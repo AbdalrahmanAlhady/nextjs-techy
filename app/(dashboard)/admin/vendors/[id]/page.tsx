@@ -1,5 +1,5 @@
 import React from 'react';
-import { getVendorById } from '@/app/actions/admin-vendors';
+import { getVendorById } from '@/app/actions/admin/vendors';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/ui/BackButton';
 import RoleChip from '@/components/ui/RoleChip';

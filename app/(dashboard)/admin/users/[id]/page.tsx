@@ -1,5 +1,5 @@
 import React from 'react';
-import { getUserById } from '@/app/actions/admin-users';
+import { getUserById } from '@/app/actions/admin/users';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import StatusChip from '@/components/ui/StatusChip';

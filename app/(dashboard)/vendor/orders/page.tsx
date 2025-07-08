@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getVendorOrders } from '@/app/actions/vendor-orders';
+import { getVendorOrders } from '@/app/actions/vendor/orders';
 import OrdersTable from '@/components/orders/OrdersTable';
 import HomeButton from '@/components/ui/HomeButton';
 

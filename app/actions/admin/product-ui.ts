@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { addProduct, editProduct, deleteProduct } from './admin-products';
+import { addProduct, editProduct, deleteProduct } from './products';
 
 export type ProductFormData = {
   name: string;
@@ -24,9 +24,9 @@ export async function handleAddProduct(data: ProductFormData) {
       throw new Error(result.error);
     }
   } catch (error) {
-    return { 
-      success: false, 
-      error: (error as Error).message 
+    return {
+      success: false,
+      error: (error as Error).message,
     };
   }
 }
@@ -43,9 +43,9 @@ export async function handleEditProduct(productId: string, data: ProductFormData
       throw new Error(result.error);
     }
   } catch (error) {
-    return { 
-      success: false, 
-      error: (error as Error).message 
+    return {
+      success: false,
+      error: (error as Error).message,
     };
   }
 }
@@ -60,9 +60,9 @@ export async function handleDeleteProduct(productId: string) {
       throw new Error(result.error);
     }
   } catch (error) {
-    return { 
-      success: false, 
-      error: (error as Error).message 
+    return {
+      success: false,
+      error: (error as Error).message,
     };
   }
-} 
+}

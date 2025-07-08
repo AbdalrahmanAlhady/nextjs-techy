@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form";
 
 import Link from "next/link";
-import { signUpAction } from "@/app/actions/auth";
+import { signUpAction } from "@/app/actions/auth/sign-up";
 import { Input } from "@/components/ui/input";
 import AuthLayout from "@/components/AuthLayout";
 
@@ -60,6 +60,7 @@ export default function SignUpPage() {
       setError(result.error || "Sign up failed");
     } else {
       // Optionally redirect or show success
+    
     }
   };
 

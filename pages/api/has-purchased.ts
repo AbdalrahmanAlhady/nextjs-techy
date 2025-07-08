@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { hasPurchasedProduct } from '@/app/actions/buyer-has-purchased-product';
+import { hasPurchasedProduct } from '@/app/actions/buyer/has-purchased-product';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { productId } = req.query;

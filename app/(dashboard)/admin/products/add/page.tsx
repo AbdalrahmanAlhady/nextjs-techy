@@ -1,9 +1,9 @@
 import React from 'react';
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 import { redirect } from 'next/navigation';
 import ProductForm from '@/components/products/ProductForm';
-import { getAllCategories } from '@/app/actions/admin-categories';
-import { getAllVendors } from '@/app/actions/admin-vendors';
+import { getAllCategories } from '@/app/actions/admin/categories';
+import { getAllVendors } from '@/app/actions/admin/vendors';
 import BackButton from '@/components/ui/BackButton';
 
 export default async function AddProductPage() {

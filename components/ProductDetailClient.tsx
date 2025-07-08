@@ -29,7 +29,7 @@ const ProductDetailClient: React.FC<ProductDetailClientProps> = ({ product }) =>
     async function checkPurchase() {
       setPurchaseStatus('loading');
       try {
-        const { hasPurchasedProduct } = await import('@/app/actions/buyer-has-purchased-product');
+        const { hasPurchasedProduct } = await import('@/app/actions/buyer/has-purchased-product');
         const result = await hasPurchasedProduct(product.id);
         if (isMounted) {
           setPurchaseStatus(result.hasPurchased ? 'eligible' : 'ineligible');

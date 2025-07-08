@@ -2,8 +2,7 @@
 import { db, users } from '@/packages/db';
 import { eq, or } from 'drizzle-orm';
 
-// Fetch all users with the 'VENDOR'// Get all vendors and buyers with vendorStatus 'PENDING' or 'REJECTED'
-
+// Fetch vendor applications or vendors
 export async function getAllVendorApplications() {
   try {
     const vendors = await db.select().from(users).where(
@@ -19,7 +18,6 @@ export async function getAllVendorApplications() {
   }
 }
 
-// Get all approved vendors
 export async function getAllVendors() {
   try {
     const vendors = await db.select().from(users).where(eq(users.role, 'VENDOR'));
@@ -29,14 +27,13 @@ export async function getAllVendors() {
   }
 }
 
-import { sendEmail } from '../utils/send-email';
-// Approve a vendor (set vendorStatus to 'APPROVED')
+import { sendEmail } from '../../utils/send-email';
+
 export async function approveVendor(userId: string) {
   try {
     await db.update(users).set({ vendorStatus: 'APPROVED', role: 'VENDOR' }).where(eq(users.id, userId));
-    // Fetch user email
     const user = await db.select().from(users).where(eq(users.id, userId)).then(res => res[0]);
-    if (user && user.email) {
+    if (user?.email) {
       await sendEmail({
         to: user.email,
         subject: 'Your Vendor Application Has Been Approved',
@@ -50,7 +47,6 @@ export async function approveVendor(userId: string) {
   }
 }
 
-// Fetch a single vendor by ID
 export async function getVendorById(userId: string) {
   try {
     const result = await db.select().from(users).where(eq(users.id, userId));
@@ -63,13 +59,11 @@ export async function getVendorById(userId: string) {
   }
 }
 
-// Deny a vendor (set vendorStatus to 'REJECTED')
 export async function denyVendor(userId: string) {
   try {
     await db.update(users).set({ vendorStatus: 'REJECTED' }).where(eq(users.id, userId));
-    // Fetch user email
     const user = await db.select().from(users).where(eq(users.id, userId)).then(res => res[0]);
-    if (user && user.email) {
+    if (user?.email) {
       await sendEmail({
         to: user.email,
         subject: 'Your Vendor Application Has Been Rejected',
@@ -81,4 +75,4 @@ export async function denyVendor(userId: string) {
   } catch (error) {
     return { success: false, error: (error as Error).message };
   }
-} 
+}

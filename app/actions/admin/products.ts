@@ -74,4 +74,4 @@ export async function deleteProduct(productId: string) {
   } catch (error) {
     return { success: false, error: (error as Error).message };
   }
-} 
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAllCategories } from '@/app/actions/admin-categories';
+import { getAllCategories } from '@/app/actions/admin/categories';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import CategoryTable from '@/components/categories/CategoryTable';

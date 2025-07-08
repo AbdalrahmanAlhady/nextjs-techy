@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCategoryById } from '@/app/actions/admin-categories';
+import { getCategoryById } from '@/app/actions/admin/categories';
 import CategoryForm from '@/components/categories/CategoryForm';
 import BackButton from '@/components/ui/BackButton';
 

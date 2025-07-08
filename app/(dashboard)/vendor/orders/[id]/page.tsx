@@ -1,4 +1,4 @@
-import { getVendorOrderById } from "@/app/actions/vendor-orders";
+import { getVendorOrderById } from '@/app/actions/vendor/orders';
 import { notFound } from "next/navigation";
 import OrderItemRow from "@/components/orders/OrderItemRow";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";

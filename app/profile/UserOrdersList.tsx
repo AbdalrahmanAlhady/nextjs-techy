@@ -4,7 +4,7 @@ import type { Order } from '@/types/order';
 import React, { useState } from 'react';
 import UserOrderCard from '@/components/orders/UserOrderCard';
 import OrderSummary from '@/components/OrderSummary';
-import { getBuyerOrderById } from '../actions/buyer-orders';
+import { getBuyerOrderById } from '@/app/actions/buyer/orders';
 
 interface UserOrdersListProps {
   orders: Order[];

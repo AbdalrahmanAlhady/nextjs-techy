@@ -33,7 +33,7 @@ const AdminSidebar = () => (
   </aside>
 );
 
-import { getSessionFromCookie } from "@/app/actions/get-session";
+import { getSessionFromCookie } from "@/app/actions/auth/get-session";
 import { redirect } from "next/navigation";
 
 export default async function AdminLayout({

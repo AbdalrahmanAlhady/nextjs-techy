@@ -1,7 +1,6 @@
 "use server";
-import { getBuyerOrdersWithItems } from "./buyer-orders";
+import { getBuyerOrdersWithItems } from "./orders";
 
-// Returns { success: boolean, hasPurchased: boolean }
 export async function hasPurchasedProduct(productId: string) {
   const ordersResult = await getBuyerOrdersWithItems();
   if (!ordersResult.success || !Array.isArray(ordersResult.orders)) {

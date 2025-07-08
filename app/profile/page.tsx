@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation';
 import Layout from '@/components/Layout';
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 import { db } from '@/packages/db';
 import { users } from '@/packages/db/schema';
 import { eq } from 'drizzle-orm';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import UserOrdersList from './UserOrdersList';
-import { getBuyerOrdersWithItems } from '../actions/buyer-orders';
+import { getBuyerOrdersWithItems } from '@/app/actions/buyer/orders';
 
 export default async function ProfilePage() {
   const session = await getSessionFromCookie();

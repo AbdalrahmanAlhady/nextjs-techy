@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAllProducts } from '@/app/actions/admin-products';
+import { getAllProducts } from '@/app/actions/admin/products';
 import ProductTable from '@/components/products/ProductTable';
 import HomeButton from '@/components/ui/HomeButton';
 

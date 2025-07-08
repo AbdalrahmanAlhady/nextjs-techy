@@ -1,6 +1,6 @@
 import React from 'react';
 import VendorsTable from '@/components/vendors/VendorsTable';
-import { getAllVendorApplications } from '@/app/actions/admin-vendors';
+import { getAllVendorApplications } from '@/app/actions/admin/vendors';
 import HomeButton from '@/components/ui/HomeButton';
 
 

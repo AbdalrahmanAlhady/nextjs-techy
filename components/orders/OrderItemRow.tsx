@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { handleUpdateOrderItemStatus } from '@/app/actions/vendor-order-ui';
+import { handleUpdateOrderItemStatus } from '@/app/actions/vendor/order-ui';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 

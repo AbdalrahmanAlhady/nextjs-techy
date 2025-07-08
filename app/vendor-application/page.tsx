@@ -1,9 +1,9 @@
 import { redirect } from 'next/navigation';
-import { getSessionFromCookie } from '@/app/actions/get-session';
+import { getSessionFromCookie } from '@/app/actions/auth/get-session';
 import { db } from '@/packages/db';
 import { users } from '@/packages/db/schema';
 import { eq } from 'drizzle-orm';
-import { applyForVendorStatus } from '@/app/actions/vendor-application';
+import { applyForVendorStatus } from '@/app/actions/vendor/application';
 import TechyButton from '@/components/TechyButton';
 import Layout from '@/components/Layout';
 

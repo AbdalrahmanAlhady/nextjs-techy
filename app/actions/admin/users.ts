@@ -2,7 +2,6 @@
 import { db, users } from '@/packages/db';
 import { eq } from 'drizzle-orm';
 
-// Fetch all users
 export async function getAllUsers() {
   try {
     const result = await db.select().from(users);
@@ -12,7 +11,6 @@ export async function getAllUsers() {
   }
 }
 
-// Suspend a user (set status to 'SUSPENDED')
 export async function suspendUser(userId: string) {
   try {
     await db.update(users).set({ status: 'SUSPENDED' }).where(eq(users.id, userId));
@@ -22,7 +20,6 @@ export async function suspendUser(userId: string) {
   }
 }
 
-// Reinstate a user (set status to 'ACTIVE')
 export async function reinstateUser(userId: string) {
   try {
     await db.update(users).set({ status: 'ACTIVE' }).where(eq(users.id, userId));
@@ -32,7 +29,6 @@ export async function reinstateUser(userId: string) {
   }
 }
 
-// Fetch a single user by ID
 export async function getUserById(userId: string) {
   try {
     const result = await db.select().from(users).where(eq(users.id, userId));
@@ -45,7 +41,6 @@ export async function getUserById(userId: string) {
   }
 }
 
-// Delete a user
 export async function deleteUser(userId: string) {
   try {
     await db.delete(users).where(eq(users.id, userId));
@@ -53,4 +48,4 @@ export async function deleteUser(userId: string) {
   } catch (error) {
     return { success: false, error: (error as Error).message };
   }
-} 
+}

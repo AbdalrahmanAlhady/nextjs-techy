@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { handleAddProduct, handleEditProduct } from '@/app/actions/admin-product-ui';
-import { handleAddVendorProduct, handleEditVendorProduct } from '@/app/actions/vendor-product-ui';
+import { handleAddProduct, handleEditProduct } from '@/app/actions/admin/product-ui';
+import { handleAddVendorProduct, handleEditVendorProduct } from '@/app/actions/vendor/product-ui';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
