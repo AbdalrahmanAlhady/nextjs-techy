@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { ReloadIcon } from "@radix-ui/react-icons";
 import { signInAction } from "@/app/actions/auth/sign-in";
 import { getSessionFromCookie } from "@/app/actions/auth/get-session";
 
@@ -39,12 +40,14 @@ export default function SignInPage() {
   const [error, setError] = React.useState<string | null>(null);
   const { useRouter } = require('next/navigation');
   const router = useRouter();
+  const [loading, setLoading] = React.useState(false);
   async function handleSetCookie(token: string) {
     const { setAuthCookie } = await import("@/app/actions/auth/set-cookie");
     await setAuthCookie(token);
   }
 
   const onSubmit = async (data: SignInFormData) => {
+    setLoading(true);
     setError(null);
     const fd = new FormData();
     fd.append("email", data.email);
@@ -53,8 +56,10 @@ export default function SignInPage() {
     if (result && result.success && result.token) {
       await handleSetCookie(result.token);
       router.push("/");
+      setLoading(false);
     } else {
       setError(result?.error || "Sign in failed");
+      setLoading(false);
     }
   };
 
@@ -106,8 +111,12 @@ export default function SignInPage() {
                     {error && (
                       <div className="text-red-600 text-sm text-center">{error}</div>
                     )}
-                    <TechyButton variant="secondary" type="submit" className="w-full">
-                      Sign In
+                    <TechyButton variant="primary" type="submit" className="w-full" disabled={loading}>
+                      {loading ? (
+                        <ReloadIcon className="h-5 w-5 animate-spin text-white mx-auto" />
+                      ) : (
+                        'Sign In'
+                      )}
                     </TechyButton>
                   </form>
                 );

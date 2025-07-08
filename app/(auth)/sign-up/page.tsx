@@ -19,6 +19,7 @@ import Link from "next/link";
 import { signUpAction } from "@/app/actions/auth/sign-up";
 import { Input } from "@/components/ui/input";
 import AuthLayout from "@/components/AuthLayout";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 const signUpSchema = z
   .object({
@@ -48,8 +49,10 @@ export default function SignUpPage() {
     },
   });
   const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
   const onSubmit = async (data: SignUpFormData) => {
+    setLoading(true);
     setError(null);
     const fd = new FormData();
     fd.append("name", data.fullName);
@@ -58,9 +61,10 @@ export default function SignUpPage() {
     const result = await signUpAction(fd);
     if (result && !result.success) {
       setError(result.error || "Sign up failed");
+      setLoading(false);
     } else {
-      // Optionally redirect or show success
-    
+      // On success redirect handled by server, but clear loading just in case
+      setLoading(false);
     }
   };
 
@@ -155,8 +159,12 @@ export default function SignUpPage() {
                     {error}
                   </div>
                 )}
-                <TechyButton type="submit" className="w-full">
-                  Sign Up
+                <TechyButton variant="primary" type="submit" className="w-full" disabled={loading}>
+                  {loading ? (
+                    <ReloadIcon className="h-5 w-5 animate-spin text-primary mx-auto" />
+                  ) : (
+                    'Sign Up'
+                  )}
                 </TechyButton>
               </form>
             </Form>
